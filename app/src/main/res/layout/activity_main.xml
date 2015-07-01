@@ -180,7 +180,7 @@
                         android:id="@+id/velocityText"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
-                        android:paddingBottom="16dp"
+                        android:layout_marginBottom="24dp"
                         />
                 </LinearLayout>
                 <LinearLayout
