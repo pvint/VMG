@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string-array name="gpsUpdatelistArray">
+            <item>1 s</item>
+            <item>5 s</item>
+            <item>10 s</item>
+            <item>30 s</item>
+            <item>60 s</item>
+
+        </string-array>
+
+        <string-array name="gpsUpdatelistValues">
+            <item>1</item>
+            <item>5</item>
+            <item>10</item>
+            <item>30</item>
+            <item>60</item>
+
+        </string-array>
+
+
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Settings">
+        <ListPreference
+            android:title="GPS Update Interval"
+            android:key="gpsIntervalPref"
+            android:defaultValue="10"
+            android:entries="@array/gpsUpdatelistArray"
+            android:entryValues="@array/gpsUpdatelistValues" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

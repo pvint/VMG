@@ -4,4 +4,10 @@
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100"  />
 
+    <item
+            android:id="@+id/settingsAbout"
+            android:title="@string/settingsAboutText"
+            android:orderInCategory="999">
+
+    </item>
 </menu>

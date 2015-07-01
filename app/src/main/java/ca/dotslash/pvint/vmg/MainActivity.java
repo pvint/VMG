@@ -2,14 +2,20 @@ package ca.dotslash.pvint.vmg;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.preference.ListPreference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -65,8 +71,8 @@ public class MainActivity extends ActionBarActivity
     private boolean followme;
     private Vibrator vibrate;
 
-    private int gpsInterval = 1000;
-    private int gpsFastestInterval = 1000;
+    private int gpsInterval = 10;
+    private int gpsFastestInterval = 10;
 
 
     private LocationRequest locationrequest;
@@ -92,6 +98,7 @@ public class MainActivity extends ActionBarActivity
 
     private int running;
 
+    private SharedPreferences.OnSharedPreferenceChangeListener prefListener;
 
     private Map<String, Float> unitFactors;
 
@@ -105,10 +112,10 @@ public class MainActivity extends ActionBarActivity
     }
 
     protected void createLocationRequest() {
-        Log.d(LABEL, "createLocationRequest");
+        //Log.d(LABEL, "createLocationRequest");
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(gpsInterval);
-        mLocationRequest.setFastestInterval(gpsFastestInterval);
+        mLocationRequest.setInterval(gpsInterval * 1000 );
+        mLocationRequest.setFastestInterval(gpsFastestInterval * 1000 );
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -127,6 +134,33 @@ public class MainActivity extends ActionBarActivity
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
 
+
+//listener on changed sort order preference:
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+
+
+                //Log.d("VMG","Settings key changed: " + key + prefs.getString(key, "zz"));
+                if (key.equals("gpsIntervalPref"))
+                {
+                    int i = Integer.parseInt(prefs.getString(key, "10"));
+                    if ( i < 1 || i > 9999)
+                        return;
+                    else
+                    {
+                        gpsInterval = i;
+                        gpsFastestInterval = gpsInterval;
+//Log.d("VMG","Interval: " + gpsInterval);
+                        mLocationRequest.setInterval(gpsInterval * 1000 );
+                        mLocationRequest.setFastestInterval(gpsFastestInterval * 1000 );
+                    }
+                }
+
+            }
+        };
+        prefs.registerOnSharedPreferenceChangeListener(prefListener);
 
 
         // set to follow location by default
@@ -243,7 +277,7 @@ public class MainActivity extends ActionBarActivity
 
 
         }
-        Log.d("VMG","Done onCreate");
+        //Log.d("VMG","Done onCreate");
     }
 
     @Override
@@ -278,7 +312,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
 
 
         return true;
@@ -291,13 +325,29 @@ public class MainActivity extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        switch (id) {
+            case R.id.action_settings:
+                Intent i = new Intent(this, PreferencesHelpExample.class);
+                startActivity(i);
+
+                return true;
+            case R.id.settingsAbout:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.dotslash.ca/vmg"));
+                startActivity(browserIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
         //noinspection SimplifiableIfStatement
         /*if (id == R.id.action_settings) {
             return true;
         }*/
 
-        return super.onOptionsItemSelected(item);
+        //return super.onOptionsItemSelected(item);
     }
+
+
+
 
     @Override
     public void onMapReady(GoogleMap map) { // FIXME not working!!!
@@ -334,7 +384,7 @@ public class MainActivity extends ActionBarActivity
                 }
             }
         } catch (NullPointerException exception){
-            Log.e("mapApp", exception.toString());
+            //Log.e("mapApp", exception.toString());
         }
     }
 
@@ -387,7 +437,6 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onConnected(Bundle bundle)
     {
-        Log.i("LCAM", "Location services connected.");
         location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         // start listening to location updates
@@ -411,7 +460,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void handleNewLocation(Location location) {
-        Log.d(LABEL, "handleNewLocation" + location.toString());
+        //Log.d(LABEL, "handleNewLocation" + location.toString());
         if (location != null) {
             LatLng myLocation = new LatLng(location.getLatitude(),
                     location.getLongitude());
@@ -423,7 +472,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.i("LCAM", "Location services suspended. Please reconnect.");
+        //Log.i("VMG", "Location services suspended. Please reconnect.");
     }
 
     @Override
@@ -551,7 +600,7 @@ public class MainActivity extends ActionBarActivity
                                 , new LatLng(Math.toDegrees(lat2), Math.toDegrees(lon2)))
                         .width(3).color(Color.GREEN).zIndex(1));
 
-            if (circleFive != null)
+            /*if (circleFive != null)
                 circleFive.remove();
 
             float z = googleMap.getCameraPosition().zoom;
@@ -564,7 +613,7 @@ public class MainActivity extends ActionBarActivity
                     .radius(1.0f/z*1000.0f); // In meters
 
             // Get back the mutable Circle
-            circleFive = googleMap.addCircle(circleOptions);
+            circleFive = googleMap.addCircle(circleOptions);*/
 
             // calc for 30 minutes out
             lat2 = Math.asin( Math.sin(lt) * Math.cos(dRatio2) +
@@ -693,7 +742,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void activate(OnLocationChangedListener onLocationChangedListener) {
-        Log.d("VMG","activate onChangeListener");
+        //Log.d("VMG","activate onChangeListener");
     }
 
     @Override
