@@ -35,10 +35,10 @@
 
 
         <activity android:name=".PreferencesHelpExample" android:label="Prefs">
-            <intent-filer>
+            <intent-filter>
                 <action android:name=".Preferences" />
                 <category android:name="android.intent.cetagory.PREFERENCE" />
-            </intent-filer>
+            </intent-filter>
         </activity>
 
 

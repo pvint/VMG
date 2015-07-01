@@ -6,14 +6,15 @@ android {
 
     defaultConfig {
         applicationId "ca.dotslash.pvint.vmg"
-        minSdkVersion 15
+        minSdkVersion 11
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        archivesBaseName = "dotslashca-vmg-" + versionName
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
