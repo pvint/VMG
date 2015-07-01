@@ -180,6 +180,7 @@
                         android:id="@+id/velocityText"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
+                        android:paddingBottom="16dp"
                         />
                 </LinearLayout>
                 <LinearLayout
@@ -194,10 +195,30 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="VMC/VMG"
-                        android:id="@+id/velocityMadeGoodTextLabel"
+                        android:text="ETA"
+                        android:id="@+id/etaTextLabel"
                         android:background="#aaffffff"
                         android:textAlignment="center" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Large Text2"
+                        android:id="@+id/etaText"
+                        android:background="#aaffffff"
+                        android:textAlignment="center"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        /><TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="VMC/VMG"
+                    android:id="@+id/velocityMadeGoodTextLabel"
+                    android:background="#aaffffff"
+                    android:textAlignment="center" />
 
 
                     <TextView

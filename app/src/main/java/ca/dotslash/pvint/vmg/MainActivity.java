@@ -36,8 +36,11 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends ActionBarActivity
@@ -72,6 +75,7 @@ public class MainActivity extends ActionBarActivity
     private TextView bearingText;
     private TextView speedText;
     private TextView vmcText;
+    private TextView etaText;
     private TextView headingText;
     private TextView headingErrorText;
 
@@ -157,6 +161,9 @@ public class MainActivity extends ActionBarActivity
 
         vmcText = (TextView) findViewById(R.id.velocityMadeGoodText);
         vmcText.setText("--");
+
+        etaText = (TextView) findViewById(R.id.etaText);
+        etaText.setText("--");
 
         headingText = (TextView) findViewById(R.id.headingText);
         headingText.setText("--");
@@ -271,7 +278,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
 
 
         return true;
@@ -462,13 +469,24 @@ public class MainActivity extends ActionBarActivity
             h = googleMap.getMyLocation().getBearing();
             v = googleMap.getMyLocation().getSpeed();
 
-            float vmc = 0;
+            float vmc = 0.0f;
+            float eta = 0.0f;
 
             if (destinationMarker != null) {
                 vmc = v * (float) Math.cos((double) Math.toRadians(h - b));
                 //speedText.setText(Float.toString(v));
                 //vmcText.setText(Float.toString(vmc));
-                displayDistance();
+
+                // calc ETA
+                if ( d > 0 )
+                {
+                    eta = d / vmc;
+                }
+                else
+                {
+                    eta = 0.0f;
+                }
+                displayETA( eta );
 
                 if (waypointVector != null)
                     waypointVector.remove();
@@ -574,6 +592,20 @@ public class MainActivity extends ActionBarActivity
         //Log.d("VMG", Float.toString(d));
     }
 
+    private String secondsToTime( float s )
+    {
+        // convert seconds to human time, ie: "00:13:46"
+        int secs = (int) s;
+
+        int hours = secs / 3600;
+        int minutes = secs / 60 % 60;
+        int seconds = secs % 60;
+
+        String t = String.format("%d:%02d:%02d", hours, minutes, seconds);
+
+        return t;
+    }
+
     private void displaySpeed(float v, float vmc, float b) {
 
         switch (velocityUnits)
@@ -629,11 +661,31 @@ public class MainActivity extends ActionBarActivity
 
     }
 
+    private void displayETA( float eta )
+    {
+
+        if (eta <= 0)
+        {
+            etaText.setTextColor(Color.RED);
+            etaText.setText( "∞" );
+        }
+        else
+        {
+            etaText.setTextColor(Color.BLACK);
+            etaText.setText( secondsToTime(eta) );
+        }
+    }
+
     private String formatToSigFigs(float n)
+    {
+        return formatToSigFigs(n, 3);
+    }
+
+    private String formatToSigFigs(float n, int figs)
     {
 
         BigDecimal bd = new BigDecimal(n);
-        bd = bd.round(new MathContext(3));
+        bd = bd.round(new MathContext( figs ));
         String s = bd.toPlainString();
 
         return s;
