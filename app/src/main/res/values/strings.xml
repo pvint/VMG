@@ -3,6 +3,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="settingsAboutText">About: VMG ©2015 Paul Vint  http://dotslash.ca/vmg</string>
+    <string name="settingsAboutText">About: VMG v3 ©2015 Paul Vint  http://dotslash.ca/vmg</string>
 
 </resources>

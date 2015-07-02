@@ -8,8 +8,8 @@ android {
         applicationId "ca.dotslash.pvint.vmg"
         minSdkVersion 11
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "3.0"
         archivesBaseName = "dotslashca-vmg-" + versionName
     }
     buildTypes {
